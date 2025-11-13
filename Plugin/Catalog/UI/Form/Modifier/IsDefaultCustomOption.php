@@ -13,7 +13,9 @@ use Magento\Ui\Component\Form\Field;
 class IsDefaultCustomOption
 {
     protected const FIELD_IS_DEFAULT = 'is_default';
+    protected const FIELD_EXTRA_INFO = 'extra_info';
     private const DEFAULT_SORT_ORDER = 70;
+    private const EXTRA_INFO_SORT_ORDER = 50;
 
     /**
      * @var Config
@@ -44,6 +46,7 @@ class IsDefaultCustomOption
                                                 'children' => [
                                                     'record' => [
                                                         'children' => [
+                                                            static::FIELD_EXTRA_INFO => $this->getExtraInfoFieldConfig(self::EXTRA_INFO_SORT_ORDER),
                                                             static::FIELD_IS_DEFAULT => $this->getIsDefaultFieldConfig(self::DEFAULT_SORT_ORDER),
                                                         ],
                                                     ],
@@ -77,6 +80,25 @@ class IsDefaultCustomOption
                             'true' => '1',
                             'false' => '0',
                         ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    protected function getExtraInfoFieldConfig($sortOrder): array
+    {
+        return [
+            'arguments' => [
+                'data' => [
+                    'config' => [
+                        'label' => __('Extra Info'),
+                        'componentType' => Field::NAME,
+                        'formElement' => 'input',
+                        'dataScope' => static::FIELD_EXTRA_INFO,
+                        'dataType' => Text::NAME,
+                        'sortOrder' => $sortOrder,
+                        'visible' => true,
                     ],
                 ],
             ],

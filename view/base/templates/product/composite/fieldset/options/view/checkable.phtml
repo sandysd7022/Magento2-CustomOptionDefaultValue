@@ -14,7 +14,10 @@ if ($option) : ?>
     $arraySign = $optionType === Option::OPTION_TYPE_CHECKBOX ? '[]' : '';
     $count = 1;
     ?>
-
+<?php
+$product = $block->getProduct();
+$basePrice = $product ? $product->getFinalPrice() : null;
+?>
 <div class="options-list nested" id="options-<?php echo /* @noEscape */ $option->getId() ?>-list">
     <?php if ($optionType === Option::OPTION_TYPE_RADIO && !$option->getIsRequire()): ?>
     <div class="field choice admin__field admin__field-option">
@@ -91,10 +94,82 @@ if ($option) : ?>
                 <span>
                     <?php echo $block->escapeHtml($value->getTitle()) ?>
                 </span>
-                <?php echo /* @noEscape */
-                $block->formatPrice($value) ?>
+                 <div class="additional-info">
+                    <?php if($value->getSku()) { ?>
+                 <span class="option-sku">
+                    <?= $block->escapeHtml($value->getSku()) ?>
+                </span>
+                <?php } ?>
+                <?php if ($checked AND empty($value->getPrice()) ) {
+                        $formattedOptionValue = is_numeric($basePrice) ? number_format($basePrice, 2, '.', '') : $basePrice;
+                 ?>
+                    <span class="price-notice">
+                        <span class="price-container tax weee">
+                            <span data-price-amount="<?= /* @noEscape */ $formattedOptionValue; ?>" data-price-type="" class="price-wrapper "> $<?= /* @noEscape */ $formattedOptionValue; ?> </span>
+                            </span>
+                        </span>
+                                        
+                <?php } else { ?>
+                    <?= /* @noEscape */ $block->formatPrice($value) ?>
+                <?php } ?>
+
+                <?php if($value->getData('extra_info')) { ?>
+                 <span class="option-extra-info">
+                    <?= $block->escapeHtml($value->getData('extra_info')) ?>
+                </span>
+                <?php } ?>
+                </div>
             </label>
         </div>
     <?php endforeach; ?>
     </div>
 <?php endif; ?>
+
+
+<script>
+    require(['jquery'], function($) {
+        $(document).ready(function() {
+            function updateSelectedText() {
+                var selectedTexts = [];
+                var selected_option_sku = '';
+
+                $('.product-custom-option').each(function() {
+                    var $input = $(this);
+
+                    // For radio buttons: only include the checked one
+                    if ($input.is(':radio') && $input.prop('checked')) {
+                        var labelText = $input.closest('.admin__field-option').find('label span:first').text().trim();
+                        var extraText = $input.closest('.admin__field-option').find('span.option-extra-info').text().trim();
+                        selected_option_sku = $input.closest('.admin__field-option').find('span.option-sku').text().trim();
+                        selectedTexts.push(labelText+' '+extraText);
+                    }
+
+                    // For checkboxes: include all checked
+                    if ($input.is(':checkbox') && $input.prop('checked')) {
+                        var labelText = $input.closest('.admin__field-option').find('label span:first').text().trim();
+                        var extraText = $input.closest('.admin__field-option').find('span.option-extra-info').text().trim();
+                        selected_option_sku = $input.closest('.admin__field-option').find('span.option-sku').text().trim();
+                        selectedTexts.push(labelText+' '+extraText);
+                    }
+                });
+
+                $('.selected-options-txt').text(' : '+selectedTexts.join(', '));
+                $('.p_sku_value')
+                .css('background-color', '#ed8faf30') // light yellow
+                .text(selected_option_sku)
+                .animate({ backgroundColor: '#ffffff' }, 1000); // fade back to white
+
+                
+            }
+
+            // Bind change event to inputs
+            $('.product-custom-option').on('change', function() {
+                updateSelectedText();
+
+            });
+
+            // Trigger on page load to capture default checked options
+            updateSelectedText();
+        });
+    });
+</script>
