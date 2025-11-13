@@ -41,6 +41,7 @@ Magento 2 Custom Option Default Value extension use to set custom option default
 
 ![Setting Custom Option of Product](https://github.com/sandysd7022/Magento2-CustomOptionDefaultValue/blob/main/product_1.png)
 
+![Extra info Field](https://github.com/sandysd7022/Magento2-CustomOptionDefaultValue/blob/main/extra_info.png)
 
 #### Support
  If you encounter any problems or bugs, please open an [issue](https://github.com/sandysd7022/Magento2-CustomOptionDefaultValue/issues) on GitHub.
