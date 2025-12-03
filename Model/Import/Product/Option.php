@@ -3,7 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace SD\CustomOptionDefaultValue\Model\Import\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
@@ -2198,4 +2197,5 @@ class Option extends \Magento\CatalogImportExport\Model\Import\Product\Option
         }
     }
 }
+
 
